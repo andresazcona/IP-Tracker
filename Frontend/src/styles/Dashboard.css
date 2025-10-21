@@ -1,0 +1,443 @@
+/* Estilos para el Dashboard */
+
+.dashboard {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+/* Header */
+.dashboard-header {
+  height: 80px;
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-small);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.header-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.api-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-healthy {
+  background-color: var(--color-success);
+}
+
+.status-error {
+  background-color: var(--color-error);
+}
+
+.header-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.header-button:hover {
+  background-color: var(--color-hover);
+}
+
+.admin-button {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.admin-button:hover {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.logout-button {
+  background-color: var(--color-error);
+  color: white;
+  border-color: var(--color-error);
+}
+
+.logout-button:hover {
+  background-color: #d63031;
+}
+
+/* Main content */
+.dashboard-main {
+  padding: var(--spacing-lg) var(--spacing-md);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Stats section */
+.stats-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.stat-card {
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  text-align: center;
+  box-shadow: var(--shadow-small);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.stat-active .stat-number {
+  color: var(--color-success);
+}
+
+.stat-inactive .stat-number {
+  color: var(--color-error);
+}
+
+/* Filters section */
+.filters-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.filters-container {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.filter-button {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filter-button:hover {
+  background-color: var(--color-hover);
+}
+
+.filter-button.active {
+  background-color: var(--color-info);
+  color: white;
+  border-color: var(--color-info);
+}
+
+/* Devices section */
+.devices-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+.devices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-secondary);
+}
+
+.empty-state-icon {
+  margin-bottom: var(--spacing-md);
+  color: var(--color-border);
+}
+
+/* Loading states */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-spinner-large {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Device Cards */
+.device-card {
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-medium);
+  position: relative;
+}
+
+.device-card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+  background-color: var(--color-hover);
+}
+
+.device-status-bar {
+  height: 4px;
+  width: 100%;
+}
+
+.status-bar-active {
+  background-color: var(--color-success);
+}
+
+.status-bar-inactive {
+  background-color: var(--color-error);
+}
+
+.device-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.device-icon {
+  color: var(--color-text);
+  opacity: 0.8;
+}
+
+.device-status-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-active {
+  background-color: var(--color-success);
+}
+
+.status-inactive {
+  background-color: var(--color-error);
+}
+
+.device-content {
+  padding: var(--spacing-md);
+  text-align: left;
+}
+
+.device-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md) 0;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.device-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  align-items: flex-start;
+}
+
+.device-info-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.875rem;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  justify-content: flex-start;
+  line-height: 1.4;
+}
+
+.info-label {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  min-width: 80px;
+  text-align: left;
+}
+
+.info-value {
+  color: var(--color-text);
+  font-weight: 400;
+  text-align: left;
+  flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 0 var(--spacing-sm);
+    height: auto;
+    min-height: 70px;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .dashboard-main {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+  }
+
+  .filters-container {
+    justify-content: stretch;
+  }
+
+  .filter-button {
+    flex: 1;
+    text-align: center;
+  }
+
+  .devices-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-right {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .api-status {
+    font-size: 0.75rem;
+  }
+
+  .header-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stat-card {
+    padding: var(--spacing-sm);
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* Estilos para IP clickeable */
+.clickable-ip {
+  cursor: pointer !important;
+  position: relative;
+}
+
+.clickable-ip:hover {
+  background-color: var(--color-hover);
+  border-radius: var(--radius-sm);
+}
+
+.ip-address {
+  display: flex;
+  align-items: center;
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+  color: var(--color-text-secondary) !important;
+}
+
+.ip-address:hover {
+  color: var(--color-text) !important;
+}
+
+.clickable-ip .info-label {
+  margin-right: var(--spacing-xs);
+}

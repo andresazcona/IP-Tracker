@@ -1,0 +1,727 @@
+{
+  "info": {
+    "name": "IP Tracker API - Complete Test Suite",
+    "description": "Comprehensive test collection for all API endpoints including authentication, users, devices, and assignments",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health & Status",
+      "item": [
+        {
+          "name": "Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains status OK', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.status).to.eql('OK');",
+                  "});",
+                  "",
+                  "pm.test('Response contains service name', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.service).to.include('IP Tracker');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Valid Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains access token', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.tokens).to.have.property('access_token');",
+                  "    pm.environment.set('accessToken', responseJson.tokens.access_token);",
+                  "});",
+                  "",
+                  "pm.test('Response contains user info', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.user).to.have.property('username');",
+                  "    pm.expect(responseJson.user).to.have.property('role');",
+                  "    pm.environment.set('currentUserId', responseJson.user.id);",
+                  "});",
+                  "",
+                  "pm.test('User has admin permissions', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.user.permissions).to.include('users.create');",
+                  "    pm.expect(responseJson.user.permissions).to.include('devices.create');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username_or_email\": \"{{adminUsername}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Invalid Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test('Error message indicates authentication failure', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.error).to.satisfy(msg => msg.includes('Invalid credentials') || msg.includes('Authentication'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username_or_email\": \"invalid_user\",\n  \"password\": \"wrong_password\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Create Test User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const timestamp = Date.now();",
+                  "pm.environment.set('testUsername', `testuser${timestamp}`);",
+                  "pm.environment.set('testUserEmail', `test${timestamp}@test.com`);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('User created successfully', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('created');",
+                  "    pm.expect(responseJson.user).to.have.property('id');",
+                  "    pm.environment.set('testUserId', responseJson.user.id);",
+                  "});",
+                  "",
+                  "pm.test('User has correct information', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.user.username).to.eql(pm.environment.get('testUsername'));",
+                  "    pm.expect(responseJson.user.email).to.eql(pm.environment.get('testUserEmail'));",
+                  "    pm.expect(responseJson.user.first_name).to.eql('Test');",
+                  "    pm.expect(responseJson.user.last_name).to.eql('User');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{testUsername}}\",\n  \"email\": \"{{testUserEmail}}\",\n  \"password\": \"testpass123\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"User\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains users array', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.users).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Users have required fields', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.users.length > 0) {",
+                  "        const user = responseJson.users[0];",
+                  "        pm.expect(user).to.have.property('id');",
+                  "        pm.expect(user).to.have.property('username');",
+                  "        pm.expect(user).to.have.property('email');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('User details returned correctly', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.user.id).to.eql(pm.environment.get('testUserId'));",
+                  "    pm.expect(responseJson.user.username).to.eql(pm.environment.get('testUsername'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{testUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{testUserId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('User updated successfully', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('updated');",
+                  "    pm.expect(responseJson.user.first_name).to.eql('Updated Test');",
+                  "    pm.expect(responseJson.user.last_name).to.eql('Updated User');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Updated Test\",\n  \"last_name\": \"Updated User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{testUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{testUserId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Device Management",
+      "item": [
+        {
+          "name": "Create Test Device",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const timestamp = Date.now();",
+                  "pm.environment.set('testDeviceName', `TestDevice${timestamp}`);",
+                  "pm.environment.set('testDeviceMac', `AA:BB:CC:DD:EE:${timestamp.toString().slice(-2)}`);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Device created successfully', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('created');",
+                  "    pm.expect(responseJson.device).to.have.property('id');",
+                  "    pm.environment.set('testDeviceId', responseJson.device.id);",
+                  "});",
+                  "",
+                  "pm.test('Device has correct information', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.device.device_name).to.eql(pm.environment.get('testDeviceName'));",
+                  "    pm.expect(responseJson.device.device_type).to.eql('raspberry_pi');",
+                  "    pm.expect(responseJson.device.location).to.eql('Test Lab');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_name\": \"{{testDeviceName}}\",\n  \"device_type\": \"raspberry_pi\",\n  \"location\": \"Test Lab\",\n  \"description\": \"Test device for Newman testing\",\n  \"mac_address\": \"{{testDeviceMac}}\",\n  \"serial_number\": \"TEST001\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices"]
+            }
+          }
+        },
+        {
+          "name": "Get All Devices",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains devices array', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.devices).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Response contains pagination', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.pagination).to.have.property('total');",
+                  "    pm.expect(responseJson.pagination).to.have.property('limit');",
+                  "});",
+                  "",
+                  "pm.test('Test device exists in list', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const testDevice = responseJson.devices.find(device => device.id === pm.environment.get('testDeviceId'));",
+                  "    pm.expect(testDevice).to.not.be.undefined;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices"]
+            }
+          }
+        },
+        {
+          "name": "Update Device",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Device updated successfully', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('updated');",
+                  "    pm.expect(responseJson.device.location).to.eql('Updated Test Lab');",
+                  "    pm.expect(responseJson.device.description).to.eql('Updated test device for Newman');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"location\": \"Updated Test Lab\",\n  \"description\": \"Updated test device for Newman\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/{{testDeviceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "{{testDeviceId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public Endpoints",
+      "item": [
+        {
+          "name": "Device Ping",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Ping successful', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.true;",
+                  "    pm.expect(responseJson.message).to.include('recorded');",
+                  "});",
+                  "",
+                  "pm.test('Response contains device info', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('device_id');",
+                  "    pm.expect(responseJson).to.have.property('timestamp');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_name\": \"PingTestDevice\",\n  \"ip_address\": \"192.168.1.100\",\n  \"public_ip\": \"203.0.113.1\",\n  \"local_ip\": \"192.168.1.100\",\n  \"wifi_network\": \"TestNetwork\",\n  \"response_time_ms\": 45\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/ping",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "ping"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hard Delete Tests",
+      "item": [
+        {
+          "name": "Hard Delete Device",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Device deletion confirmed', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('deleted');",
+                  "    pm.expect(responseJson.device_id).to.eql(pm.environment.get('testDeviceId'));",
+                  "});",
+                  "",
+                  "// Wait for deletion to process",
+                  "setTimeout(() => {}, 100);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/{{testDeviceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "{{testDeviceId}}"]
+            }
+          }
+        },
+        {
+          "name": "Verify Device Hard Deleted",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Device no longer in devices list', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const deletedDevice = responseJson.devices.find(device => device.id === pm.environment.get('testDeviceId'));",
+                  "    pm.expect(deletedDevice).to.be.undefined;",
+                  "});",
+                  "",
+                  "console.log('Device hard delete verified successfully');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices"]
+            }
+          }
+        },
+        {
+          "name": "Hard Delete User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('User deletion confirmed', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('deleted');",
+                  "});",
+                  "",
+                  "// Wait for deletion to process",
+                  "setTimeout(() => {}, 100);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{testUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{testUserId}}"]
+            }
+          }
+        },
+        {
+          "name": "Verify User Hard Deleted",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('User no longer in users list', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const deletedUser = responseJson.users.find(user => user.id === pm.environment.get('testUserId'));",
+                  "    pm.expect(deletedUser).to.be.undefined;",
+                  "});",
+                  "",
+                  "console.log('User hard delete verified successfully');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "adminUsername",
+      "value": "andresazcona",
+      "type": "string"
+    },
+    {
+      "key": "adminPassword",
+      "value": "Andres.1111",
+      "type": "string"
+    }
+  ]
+}

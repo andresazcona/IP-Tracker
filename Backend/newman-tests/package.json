@@ -1,0 +1,45 @@
+{
+  "name": "ip-tracker-newman-tests",
+  "version": "1.0.0",
+  "description": "Newman test suite for IP Tracker API",
+  "main": "run-newman-tests.ps1",
+  "scripts": {
+    "test": "newman run IP-Tracker-Complete-Tests.postman_collection.json --environment IP-Tracker-Environment.postman_environment.json",
+    "test:html": "newman run IP-Tracker-Complete-Tests.postman_collection.json --environment IP-Tracker-Environment.postman_environment.json --reporters cli,htmlextra --reporter-htmlextra-export newman-results/report.html",
+    "test:json": "newman run IP-Tracker-Complete-Tests.postman_collection.json --environment IP-Tracker-Environment.postman_environment.json --reporters cli,json --reporter-json-export newman-results/report.json",
+    "test:all": "newman run IP-Tracker-Complete-Tests.postman_collection.json --environment IP-Tracker-Environment.postman_environment.json --reporters cli,htmlextra,json --reporter-htmlextra-export newman-results/report.html --reporter-json-export newman-results/report.json",
+    "test:config": "newman run --config-file newman.config.json",
+    "test:ci": "newman run IP-Tracker-Complete-Tests.postman_collection.json --environment IP-Tracker-Environment.postman_environment.json --reporters cli,junit --reporter-junit-export newman-results/junit-report.xml --bail",
+    "setup": "npm install -g newman newman-reporter-htmlextra newman-reporter-junit",
+    "clean": "rimraf newman-results/*.html newman-results/*.json newman-results/*.xml",
+    "health": "curl -f http://localhost:3000/health || echo 'API server not running'"
+  },
+  "keywords": [
+    "newman",
+    "postman",
+    "api-testing",
+    "ip-tracker",
+    "testing",
+    "automation"
+  ],
+  "author": "IP Tracker Team",
+  "license": "MIT",
+  "devDependencies": {
+    "newman": "^6.0.0",
+    "newman-reporter-htmlextra": "^1.23.0",
+    "newman-reporter-junit": "^1.1.0",
+    "rimraf": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andresazcona/IP-Server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/andresazcona/IP-Server/issues"
+  },
+  "homepage": "https://github.com/andresazcona/IP-Server#readme"
+}

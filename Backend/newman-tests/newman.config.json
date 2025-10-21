@@ -1,0 +1,32 @@
+{
+  "run": {
+    "collection": "IP-Tracker-Complete-Tests.postman_collection.json",
+    "environment": "IP-Tracker-Environment.postman_environment.json",
+    "reporters": ["cli", "json", "junit"],
+    "reporter": {
+      "cli": {
+        "noSummary": false,
+        "noFailures": false,
+        "noAssertions": false,
+        "noConsole": false
+      },
+      "json": {
+        "export": "newman-results/newman-report.json"
+      },
+      "junit": {
+        "export": "newman-results/newman-report.xml"
+      }
+    },
+    "iterationCount": 1,
+    "delayRequest": 0,
+    "timeout": 30000,
+    "timeoutRequest": 10000,
+    "timeoutScript": 5000,
+    "bail": false,
+    "verbose": false,
+    "color": "auto",
+    "insecure": false,
+    "ignoreRedirects": false,
+    "folder": []
+  }
+}
