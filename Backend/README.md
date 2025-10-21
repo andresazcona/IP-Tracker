@@ -174,3 +174,19 @@ Backend/
 Usar los scripts incluidos:
 - `ip-ping.sh`: Script para enviar ping cada 5 minutos
 - `install-service.sh`: Instalar como servicio systemd
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Eres libre de usar, modificar y distribuir este software.
+
+**Copyright (c) 2025 Andres Azcona**
+
+---
+
+<div align="center">
+
+**Hecho con ❤️ por [Andres Azcona](https://github.com/andresazcona)**
+
+⭐️ Si este proyecto te fue útil, considera darle una estrella en GitHub
+
+</div>

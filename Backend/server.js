@@ -29,7 +29,7 @@ app.use(cors(corsOptions));
 // Handle preflight requests
 app.options('*', cors(corsOptions));
 
-console.log('🌐 CORS Configuration applied:', {
+console.log('CORS Configuration applied:', {
   environment: process.env.NODE_ENV || 'development',
   mode: process.env.NODE_ENV === 'production' ? 'permissive (temporary)' : 'development'
 });
@@ -175,32 +175,32 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
   runSystemInit().then((success) => {
     if (success) {
       app.listen(PORT, () => {
-        console.log(`🚀 Server running on port ${PORT}`);
-        console.log(`📍 Backend URL: ${process.env.BACKEND_URL || `http://localhost:${PORT}`}`);
-        console.log('🔐 Authentication: Enabled');
-        console.log('📱 Device Management: Enabled');
-        console.log('👥 User Management: Enabled');
-        console.log('🔗 Device Assignments: Enabled');
-        console.log('📊 Audit Logging: Enabled');
-        console.log('⚡ Offline detection: On-demand (triggered by GET requests)');
+        console.log(`Server running on port ${PORT}`);
+        console.log(`Backend URL: ${process.env.BACKEND_URL || `http://localhost:${PORT}`}`);
+        console.log('Authentication: Enabled');
+        console.log('Device Management: Enabled');
+        console.log('User Management: Enabled');
+        console.log('Device Assignments: Enabled');
+        console.log('Audit Logging: Enabled');
+        console.log('Offline detection: On-demand (triggered by GET requests)');
       });
     } else {
-      console.error('❌ Server startup aborted due to initialization failure');
+      console.error('Server startup aborted due to initialization failure');
       process.exit(1);
     }
   }).catch((error) => {
-    console.error('❌ Fatal error during system initialization:', error);
+    console.error('Fatal error during system initialization:', error);
     process.exit(1);
   });
 }
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('📪 SIGTERM received, shutting down gracefully...');
+  console.log('SIGTERM received, shutting down gracefully...');
 });
 
 process.on('SIGINT', () => {
-  console.log('📪 SIGINT received, shutting down gracefully...');
+  console.log('SIGINT received, shutting down gracefully...');
   process.exit(0);
 });
 

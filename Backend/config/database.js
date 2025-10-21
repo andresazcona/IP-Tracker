@@ -12,7 +12,7 @@ if (process.env.DATABASE_URL) {
     idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
     connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
   };
-  console.log('🔗 Using DATABASE_URL connection string');
+  console.log('Using DATABASE_URL connection string');
 } else {
   // Fallback to individual parameters
   dbConfig = {
@@ -26,7 +26,7 @@ if (process.env.DATABASE_URL) {
     idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
     connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
   };
-  console.log('🔗 Using individual database parameters');
+  console.log('Using individual database parameters');
 }
 
 // Create connection pool
@@ -43,12 +43,12 @@ const testConnection = async () => {
   try {
     const client = await pool.connect();
     const result = await client.query('SELECT NOW()');
-    console.log('✅ Database connected successfully');
-    console.log('🕐 Database time:', result.rows[0].now);
+    console.log('Database connected successfully');
+    console.log('Database time:', result.rows[0].now);
     client.release();
     return true;
   } catch (err) {
-    console.error('❌ Database connection failed:', err.message);
+    console.error('Database connection failed:', err.message);
     return false;
   }
 };
@@ -59,10 +59,10 @@ const query = async (text, params) => {
   try {
     const res = await pool.query(text, params);
     const duration = Date.now() - start;
-    console.log('🔍 Query executed:', { text, duration, rows: res.rowCount });
+    console.log('Query executed:', { text, duration, rows: res.rowCount });
     return res;
   } catch (err) {
-    console.error('❌ Query error:', err.message);
+    console.error('Query error:', err.message);
     throw err;
   }
 };
@@ -75,7 +75,7 @@ const getClient = async () => {
 // Close the pool
 const closePool = async () => {
   await pool.end();
-  console.log('📪 Database pool closed');
+  console.log('Database pool closed');
 };
 
 module.exports = {

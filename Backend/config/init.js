@@ -6,7 +6,7 @@ const db = require('../config/database');
  */
 async function initializeSystem() {
   try {
-    console.log('🔧 Checking system initialization...');
+    console.log('Checking system initialization...');
     
     // Check if admin user exists
     const adminCheck = await db.query(
@@ -16,7 +16,7 @@ async function initializeSystem() {
     );
 
     if (adminCheck.rows.length === 0) {
-      console.log('🔐 No admin user found, creating default admin...');
+  console.log('No admin user found, creating default admin...');
       
       // Get admin role ID
       const roleResult = await db.query(
@@ -25,7 +25,7 @@ async function initializeSystem() {
       );
 
       if (roleResult.rows.length === 0) {
-        console.error('❌ Admin role not found in database. Please run the database setup script.');
+        console.error('Admin role not found in database. Please run the database setup script.');
         return false;
       }
 
@@ -41,18 +41,18 @@ async function initializeSystem() {
         ['admin', 'admin@localhost', passwordHash, 'System', 'Administrator', adminRoleId]
       );
 
-      console.log('✅ Default admin user created successfully');
+      console.log('Default admin user created successfully');
       console.log('   Username: admin');
       console.log('   Email: admin@localhost');
       console.log('   Password: admin123');
-      console.log('   ⚠️  IMPORTANT: Change this password immediately!');
+      console.log('   IMPORTANT: Change this password immediately!');
     } else {
-      console.log('✅ Admin user already exists');
+      console.log('Admin user already exists');
     }
 
     return true;
   } catch (error) {
-    console.error('❌ Error during system initialization:', error.message);
+    console.error('Error during system initialization:', error.message);
     return false;
   }
 }
@@ -62,7 +62,7 @@ async function initializeSystem() {
  */
 async function checkDatabaseSchema() {
   try {
-    console.log('📊 Checking database schema...');
+    console.log('Checking database schema...');
 
     // Check for required tables
     const requiredTables = ['users', 'roles', 'devices', 'user_device_assignments', 'audit_logs'];
@@ -76,16 +76,16 @@ async function checkDatabaseSchema() {
     const missingTables = requiredTables.filter(table => !existingTableNames.includes(table));
 
     if (missingTables.length > 0) {
-      console.error('❌ Missing required database tables:', missingTables);
+      console.error('Missing required database tables:', missingTables);
       console.error('   Please run the database setup script:');
       console.error('   npm run setup-db');
       return false;
     }
 
-    console.log('✅ All required database tables found');
+    console.log('All required database tables found');
     return true;
   } catch (error) {
-    console.error('❌ Error checking database schema:', error.message);
+    console.error('Error checking database schema:', error.message);
     return false;
   }
 }
@@ -95,7 +95,7 @@ async function checkDatabaseSchema() {
  */
 async function ensureDefaultRoles() {
   try {
-    console.log('👥 Checking default roles...');
+    console.log('Checking default roles...');
 
     const defaultRoles = [
       {
@@ -140,14 +140,14 @@ async function ensureDefaultRoles() {
           'INSERT INTO roles (name, description, permissions) VALUES ($1, $2, $3)',
           [role.name, role.description, role.permissions]
         );
-        console.log(`✅ Created role: ${role.name}`);
+        console.log(`Created role: ${role.name}`);
       }
     }
 
-    console.log('✅ Default roles verified');
+    console.log('Default roles verified');
     return true;
   } catch (error) {
-    console.error('❌ Error ensuring default roles:', error.message);
+    console.error('Error ensuring default roles:', error.message);
     return false;
   }
 }
@@ -156,7 +156,7 @@ async function ensureDefaultRoles() {
  * Run complete system initialization
  */
 async function runSystemInit() {
-  console.log('🚀 Starting system initialization...');
+  console.log('Starting system initialization...');
   
   try {
     // Test database connection
@@ -180,10 +180,10 @@ async function runSystemInit() {
       return false;
     }
 
-    console.log('✨ System initialization completed successfully!');
+    console.log('System initialization completed successfully!');
     return true;
   } catch (error) {
-    console.error('❌ System initialization failed:', error.message);
+    console.error('System initialization failed:', error.message);
     return false;
   }
 }

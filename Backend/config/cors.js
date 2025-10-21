@@ -51,19 +51,19 @@ const getCorsOptions = () => {
     origin: function (origin, callback) {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) {
-        console.log('🌐 CORS: Request with no origin allowed');
+        console.log('CORS: Request with no origin allowed');
         return callback(null, true);
       }
 
       const isDevelopment = process.env.NODE_ENV !== 'production';
       
       if (isDevelopment) {
-        console.log(`🌐 CORS: Development mode - allowing origin: ${origin}`);
+        console.log(`CORS: Development mode - allowing origin: ${origin}`);
         return callback(null, true);
       }
 
       // TEMPORAL: Permitir todas las conexiones durante pruebas
-      console.log(`🌐 CORS: Production mode - TEMPORARILY allowing all origins: ${origin}`);
+  console.log(`CORS: Production mode - TEMPORARILY allowing all origins: ${origin}`);
       return callback(null, true);
 
       // TODO: Restaurar verificación estricta después de pruebas
@@ -75,25 +75,25 @@ const getCorsOptions = () => {
 
       // Check exact matches first
       if (allowedOrigins.includes(origin)) {
-        console.log(`🌐 CORS: Production mode - allowed origin: ${origin}`);
+        console.log(`CORS: Production mode - allowed origin: ${origin}`);
         return callback(null, true);
       }
 
       // Check wildcard patterns for Vercel preview deployments
       const isVercelPreview = origin.startsWith('https://srausiplogger-') && origin.endsWith('.vercel.app');
       if (isVercelPreview) {
-        console.log(`🌐 CORS: Production mode - allowed Vercel preview: ${origin}`);
+        console.log(`CORS: Production mode - allowed Vercel preview: ${origin}`);
         return callback(null, true);
       }
 
       // Block unauthorized origins in production
-      console.log(`🌐 CORS: Production mode - BLOCKED origin: ${origin}`);
+      console.log(`CORS: Production mode - BLOCKED origin: ${origin}`);
       const msg = `Not allowed by CORS policy. Origin ${origin} is not in the allowed list.`;
       return callback(new Error(msg), false);
       */
 
       // Uncomment this when you want to restrict origins in production:
-      // console.log(`🌐 CORS: Production mode - blocked origin: ${origin}`);
+      // console.log(`CORS: Production mode - blocked origin: ${origin}`);
       // const msg = `Not allowed by CORS policy. Origin ${origin} is not in the allowed list.`;
       // return callback(new Error(msg), false);
     },
@@ -111,7 +111,7 @@ const addProductionOrigins = (origins) => {
   } else {
     corsConfig.productionOrigins.push(origins);
   }
-  console.log('🌐 CORS: Added production origins:', origins);
+  console.log('CORS: Added production origins:', origins);
 };
 
 // Function to get current CORS configuration

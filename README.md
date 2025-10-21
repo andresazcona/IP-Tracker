@@ -50,9 +50,9 @@ Sistema completo para el monitoreo y gestión de dispositivos IP, especialmente 
 
 ### Instalación y Despliegue
 
-1. **Clonar el repositorio**
+### 1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/tu-usuario/IP-Tracker.git
+git clone https://github.com/andresazcona/IP-Tracker.git
 cd IP-Tracker
 ```
 
@@ -297,11 +297,13 @@ Las contribuciones son bienvenidas! Por favor:
 
 ## 🐛 Reportar Problemas
 
-Si encuentras un bug o tienes una sugerencia, por favor abre un [issue](https://github.com/tu-usuario/IP-Tracker/issues) en GitHub.
+Si encuentras un bug o tienes una sugerencia, por favor abre un [issue](https://github.com/andresazcona/IP-Tracker/issues) en GitHub.
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT. Eres libre de usar, modificar y distribuir este software.
+
+**Copyright (c) 2025 Andres Azcona**
 
 ## 👏 Agradecimientos
 
@@ -311,14 +313,14 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ## 📞 Contacto
 
-- **GitHub**: [@tu-usuario](https://github.com/tu-usuario)
-- **Issues**: [GitHub Issues](https://github.com/tu-usuario/IP-Tracker/issues)
+- **GitHub**: [@andresazcona](https://github.com/andresazcona)
+- **Issues**: [GitHub Issues](https://github.com/andresazcona/IP-Tracker/issues)
 
 ---
 
 <div align="center">
 
-**Desarrollado con ❤️ para la comunidad**
+**Hecho con ❤️ por [Andres Azcona](https://github.com/andresazcona)**
 
 ⭐️ Si este proyecto te fue útil, considera darle una estrella en GitHub
 
