@@ -1,4 +1,4 @@
-# 🌐 IP Tracker - Sistema de Monitoreo de Dispositivos IP
+# IP Tracker - Sistema de Monitoreo de Dispositivos IP
 
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
@@ -8,40 +8,40 @@
 
 Sistema completo para el monitoreo y gestión de dispositivos IP, especialmente diseñado para Raspberry Pi y dispositivos IoT. Incluye autenticación JWT, gestión de usuarios, asignación de dispositivos y registro de actividad en tiempo real.
 
-## 📋 Características
+## Características
 
-### 🔐 Autenticación y Seguridad
+### Autenticación y Seguridad
 - Sistema de autenticación JWT con tokens de acceso y refresh
 - Gestión completa de usuarios con roles (Admin, Manager, User, Viewer)
 - Control de permisos granular basado en recursos y acciones
 - Registro de auditoría de todas las acciones del sistema
 
-### 📱 Gestión de Dispositivos
+### Gestión de Dispositivos
 - Registro automático de dispositivos mediante pings periódicos
 - Seguimiento de IP pública, local y red WiFi
 - Monitoreo del estado (online/offline) en tiempo real
 - Historial completo de cambios de IP
 - Soporte para múltiples tipos de dispositivos
 
-### 👥 Gestión de Usuarios
+### Gestión de Usuarios
 - CRUD completo de usuarios
 - Sistema de roles y permisos configurables
 - Asignación de dispositivos a usuarios
 - Panel de administración intuitivo
 
-### 📊 Monitoreo y Reportes
+### Monitoreo y Reportes
 - Dashboard con información en tiempo real
 - Estadísticas de conectividad y uptime
 - Logs de actividad y cambios de IP
 - Detección automática de dispositivos offline
 
-### 🐳 Contenerización
+### Contenerización
 - Arquitectura completamente dockerizada
 - Despliegue con un solo comando
 - Base de datos PostgreSQL persistente
 - Frontend servido con Nginx optimizado
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Prerrequisitos
 
@@ -82,7 +82,7 @@ docker-compose up -d --build
 
 ¡Eso es todo! La aplicación estará corriendo con la base de datos inicializada y lista para usar.
 
-## 📦 Arquitectura del Proyecto
+## Arquitectura del Proyecto
 
 ```
 IP-Tracker/
@@ -106,7 +106,7 @@ IP-Tracker/
 └── docker-compose.yml   # Orquestación de servicios
 ```
 
-## 🔧 Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 ### Backend
 - **Node.js 20** - Runtime de JavaScript
@@ -131,24 +131,24 @@ IP-Tracker/
 - **Nginx** - Servidor web para frontend
 - **Alpine Linux** - Imágenes base ligeras
 
-## 📚 Documentación de la API
+## Documentación de la API
 
 ### Endpoints Principales
 
-#### 🔐 Autenticación
+#### Autenticación
 - `POST /api/auth/login` - Iniciar sesión
 - `POST /api/auth/logout` - Cerrar sesión
 - `POST /api/auth/refresh` - Renovar token
 - `GET /api/auth/me` - Obtener usuario actual
 
-#### 👥 Usuarios
+#### Usuarios
 - `GET /api/users` - Listar usuarios (paginado)
 - `POST /api/users` - Crear usuario
 - `GET /api/users/:id` - Obtener usuario
 - `PUT /api/users/:id` - Actualizar usuario
 - `DELETE /api/users/:id` - Eliminar usuario
 
-#### 📱 Dispositivos
+#### Dispositivos
 - `GET /api/devices` - Listar dispositivos
 - `POST /api/devices` - Registrar dispositivo
 - `GET /api/devices/:id` - Obtener dispositivo
@@ -156,14 +156,14 @@ IP-Tracker/
 - `DELETE /api/devices/:id` - Eliminar dispositivo
 - `POST /api/devices/:id/ping` - Registrar ping (actualizar IP)
 
-#### 🔗 Asignaciones
+#### Asignaciones
 - `GET /api/assignments` - Listar asignaciones
 - `POST /api/assignments` - Asignar dispositivo a usuario
 - `DELETE /api/assignments/:id` - Desasignar dispositivo
 
 Para documentación completa de la API, consulta [Backend/README.md](Backend/README.md)
 
-## 🐳 Comandos Docker Útiles
+## Comandos Docker Útiles
 
 ### Ver logs
 ```bash
@@ -187,7 +187,7 @@ docker-compose restart backend
 # Detener todo
 docker-compose down
 
-# Detener y eliminar volúmenes (⚠️ BORRA LA BD)
+# Detener y eliminar volúmenes (ADVERTENCIA: BORRA LA BD)
 docker-compose down -v
 
 # Reconstruir
@@ -204,7 +204,7 @@ docker-compose exec postgres psql -U postgres -d ip_tracker
 docker-compose exec postgres pg_dump -U postgres ip_tracker > backup.sql
 ```
 
-## 🔒 Seguridad
+## Seguridad
 
 ### Consideraciones Importantes
 
@@ -218,12 +218,12 @@ docker-compose exec postgres pg_dump -U postgres ip_tracker > backup.sql
 ### Variables de Entorno Sensibles
 
 Nunca subas al repositorio:
-- ❌ `.env`
-- ❌ Claves privadas
-- ❌ Contraseñas en texto plano
-- ❌ Tokens de acceso
+- `.env`
+- Claves privadas
+- Contraseñas en texto plano
+- Tokens de acceso
 
-## 🧪 Desarrollo
+## Desarrollo
 
 ### Ejecutar en modo desarrollo (sin Docker)
 
@@ -244,17 +244,17 @@ npm run dev
 ### Estructura de la Base de Datos
 
 El schema incluye:
-- ✅ Usuarios con roles y permisos
-- ✅ Dispositivos con tracking de IP
-- ✅ Historial de logs (ip_logs)
-- ✅ Estado de dispositivos (device_status)
-- ✅ Asignaciones usuario-dispositivo
-- ✅ Tokens de refresh
-- ✅ Logs de auditoría
-- ✅ Triggers automáticos para actualización de estado
-- ✅ Funciones PL/pgSQL para limpieza y mantenimiento
+- Usuarios con roles y permisos
+- Dispositivos con tracking de IP
+- Historial de logs (ip_logs)
+- Estado de dispositivos (device_status)
+- Asignaciones usuario-dispositivo
+- Tokens de refresh
+- Logs de auditoría
+- Triggers automáticos para actualización de estado
+- Funciones PL/pgSQL para limpieza y mantenimiento
 
-## 📊 Modelo de Datos
+## Modelo de Datos
 
 ```
 ┌─────────────┐       ┌──────────────┐       ┌─────────────┐
@@ -274,7 +274,7 @@ El schema incluye:
               └─────────────────┘          └─────────────┘
 ```
 
-## 🤝 Contribuir
+## Contribuir
 
 Las contribuciones son bienvenidas! Por favor:
 
@@ -284,7 +284,7 @@ Las contribuciones son bienvenidas! Por favor:
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
-## 📝 Roadmap
+## Roadmap
 
 - [ ] Notificaciones por email cuando un dispositivo cae
 - [ ] API webhooks para integración con otros sistemas
@@ -295,23 +295,23 @@ Las contribuciones son bienvenidas! Por favor:
 - [ ] Integración con sistemas de alertas (Slack, Discord)
 - [ ] Autenticación con OAuth2 (Google, GitHub)
 
-## 🐛 Reportar Problemas
+## Reportar Problemas
 
 Si encuentras un bug o tienes una sugerencia, por favor abre un [issue](https://github.com/andresazcona/IP-Tracker/issues) en GitHub.
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto está bajo la Licencia MIT. Eres libre de usar, modificar y distribuir este software.
 
 **Copyright (c) 2025 Andres Azcona**
 
-## 👏 Agradecimientos
+## Agradecimientos
 
 - Inspirado en la necesidad de monitoreo de dispositivos IoT
 - Construido con tecnologías open source
 - Comunidad de desarrolladores
 
-## 📞 Contacto
+## Contacto
 
 - **GitHub**: [@andresazcona](https://github.com/andresazcona)
 - **Issues**: [GitHub Issues](https://github.com/andresazcona/IP-Tracker/issues)
@@ -320,8 +320,8 @@ Este proyecto está bajo la Licencia MIT. Eres libre de usar, modificar y distri
 
 <div align="center">
 
-**Hecho con ❤️ por [Andres Azcona](https://github.com/andresazcona)**
+**Hecho con amor por [Andres Azcona](https://github.com/andresazcona)**
 
-⭐️ Si este proyecto te fue útil, considera darle una estrella en GitHub
+Si este proyecto te fue útil, considera darle una estrella en GitHub
 
 </div>
