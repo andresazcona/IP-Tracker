@@ -1,192 +1,71 @@
 # IP Tracker Backend
 
-## Instalación
+Express API backed by PostgreSQL. See the [root README](../README.md) for the full project overview and Docker setup.
 
-### Desarrollo Local
+## Run locally
 
-1. Clona el repositorio o copia los archivos
-2. Instala las dependencias:
-   ```bash
-   npm install
-   ```
-
-3. Configura la base de datos PostgreSQL:
-
-   **Opción A: Neon Database (Recomendado)**
-   ```bash
-   # Tu base de datos Neon ya está configurada
-   # Solo necesitas ejecutar el schema:
-   
-   # Usando la conexión directa a Neon:
-   psql 'postgresql://neondb_owner:REDACTED@ep-silent-firefly-adpjc98a-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' -f schema.sql
-   ```
-
-   **Opción B: PostgreSQL Local**
-   ```bash
-   # Conecta a PostgreSQL como superusuario
-   psql -U postgres
-
-   # Crea la base de datos
-   CREATE DATABASE ip_tracker;
-
-   # Ejecuta el schema
-   \i schema.sql
-   ```
-
-4. Configura las variables de entorno:
-   ```bash
-   cp .env.example .env
-   # Edita .env con tus configuraciones
-   ```
-
-5. Inicia el servidor:
-   ```bash
-   npm start
-   # o para desarrollo
-   npm run dev
-   ```
-
-### Despliegue en Vercel
-
-1. Asegúrate de tener el CLI de Vercel instalado:
-   ```bash
-   npm i -g vercel
-   ```
-
-2. Configura las variables de entorno en Vercel:
-   ```bash
-   vercel env add DATABASE_URL
-   # Pega tu connection string de Neon cuando se te pida
-   
-   vercel env add BACKEND_URL
-   # Usa la URL que Vercel te asignará (ej: https://your-app.vercel.app)
-   ```
-
-3. Despliega:
-   ```bash
-   vercel --prod
-   ```
-
-4. La aplicación estará disponible en tu dominio de Vercel
-
-## Configuración
-
-### Variables de Entorno
-
-**Para Neon Database:**
-- `DATABASE_URL`: URL completa de conexión a Neon (recomendado)
-
-**Para PostgreSQL local:**
-- `PORT`: Puerto del servidor (default: 3000)
-- `DB_HOST`: Host de PostgreSQL (default: localhost)
-- `DB_PORT`: Puerto de PostgreSQL (default: 5432)
-- `DB_NAME`: Nombre de la base de datos (default: ip_tracker)
-- `DB_USER`: Usuario de PostgreSQL
-- `DB_PASSWORD`: Contraseña de PostgreSQL
-- `DB_SSL`: Usar SSL (true para Neon, false para local)
-
-**Otras variables:**
-- `BACKEND_URL`: URL pública del backend (importante para Raspberry Pi)
-
-### Base de Datos
-
-El archivo `schema.sql` contiene:
-- Tablas para dispositivos, logs de IP y estado
-- Índices para mejor rendimiento
-- Triggers automáticos para actualizar estado
-- Vistas para consultas optimizadas
-- Funciones para limpieza automática
-
-## API Endpoints
-
-### Registrar dispositivo
-```
-POST /api/devices/register
-Content-Type: application/json
-
-{
-  "device_name": "raspberrypi-01",
-  "device_type": "raspberry_pi",
-  "mac_address": "00:11:22:33:44:55",
-  "description": "Dispositivo principal"
-}
+```bash
+cp .env.example .env     # set DB_* (or DATABASE_URL) and JWT_SECRET
+npm install
+npm run dev              # nodemon; use `npm start` for production
 ```
 
-### Ping de IP (usado por Raspberry Pi)
+The database must already contain the schema in `sql/complete_schema.sql`, which also creates the default roles and the `admin` user:
+
+```bash
+createdb ip_tracker
+psql -d ip_tracker -f sql/complete_schema.sql
+```
+
+On startup the server runs a small initialization step (`config/init.js`) that creates an `admin` user only if no active admin exists.
+
+## Environment variables
+
+| Variable | Default | Notes |
+| --- | --- | --- |
+| `PORT` | `3000` | |
+| `DATABASE_URL` | unset | Full connection string; takes precedence over `DB_*` (SSL is enabled when `NODE_ENV=production`) |
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | `localhost`, `5432`, `ip_tracker`, `postgres`, empty | |
+| `DB_SSL` | `false` | Set to `true` for hosted databases that require SSL |
+| `JWT_SECRET` | insecure placeholder | Always override |
+| `JWT_EXPIRES_IN`, `REFRESH_TOKEN_EXPIRES_IN` | `1h`, `7d` | |
+| `BACKEND_URL` | `http://localhost:<PORT>` | Only used in the startup log |
+
+## Endpoints
+
+- `GET /health`
+- `/api/auth`: `register`, `login`, `refresh`, `logout`, `profile`, `change-password`
+- `/api/users`: CRUD, `POST /:user_id/reset-password`, `GET /:user_id/devices`
+- `/api/devices`: CRUD, plus the public `POST /ping`
+- `/api/assignments`: CRUD, `POST /bulk`, `GET /stats/overview`
+
+### Device ping
+
 ```
 POST /api/devices/ping
 Content-Type: application/json
 
 {
-  "device_id": "uuid-del-dispositivo",
+  "device_name": "raspberrypi-01",
   "local_ip": "192.168.1.100",
   "public_ip": "203.0.113.1",
+  "wifi_network": "office",
   "port": 22
 }
 ```
 
-### Obtener todos los dispositivos
-```
-GET /api/devices/
-```
+`device_name` is required; every other field is optional. The device is created on first ping and its IP history is updated when the address changes.
 
-### Obtener dispositivo específico
-```
-GET /api/devices/{device_id}
-```
+## Tests
 
-### Health check
-```
-GET /health
+```bash
+cd newman-tests
+npx newman run IP-Tracker-Complete-Tests.postman_collection.json \
+  -e IP-Tracker-Environment.postman_environment.json
 ```
 
-## Estructura del Proyecto
+Requires the API running on `http://localhost:3000` with the default `admin` / `admin` user.
 
-```
-Backend/
-├── server.js              # Servidor principal
-├── package.json           # Dependencias
-├── schema.sql             # Schema de PostgreSQL
-├── .env.example           # Ejemplo de configuración
-├── config/
-│   └── database.js        # Configuración de BD
-└── routes/
-    └── devices.js         # Rutas de dispositivos
-```
+## Raspberry Pi client
 
-## Seguridad
-
-- Rate limiting configurado
-- Helmet para headers de seguridad
-- CORS habilitado
-- Validación de entrada
-- Manejo de errores
-
-## Monitoreo
-
-- Logs de todas las queries
-- Timestamps en todos los registros
-- Estado de conexión de dispositivos
-- Métricas de uptime
-
-## Para Raspberry Pi
-
-Usar los scripts incluidos:
-- `ip-ping.sh`: Script para enviar ping cada 5 minutos
-- `install-service.sh`: Instalar como servicio systemd
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Eres libre de usar, modificar y distribuir este software.
-
-**Copyright (c) 2025 Andres Azcona**
-
----
-
-<div align="center">
-
-**Hecho con ❤️ por [Andres Azcona](https://github.com/andresazcona)**
-
-⭐️ Si este proyecto te fue útil, considera darle una estrella en GitHub
-
-</div>
+`scripts/install.sh` (and `piip-logger/install.sh`) install a systemd service that pings the backend periodically.
