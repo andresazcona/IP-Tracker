@@ -715,12 +715,12 @@
     },
     {
       "key": "adminUsername",
-      "value": "andresazcona",
+      "value": "admin",
       "type": "string"
     },
     {
       "key": "adminPassword",
-      "value": "Andres.1111",
+      "value": "admin",
       "type": "string"
     }
   ]
