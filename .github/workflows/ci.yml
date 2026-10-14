@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # package-lock.json is not committed, so npm ci is not available
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+
+  api-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: ip_tracker
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_NAME: ip_tracker
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: ci-only-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Load schema
+        run: psql "postgresql://postgres:postgres@localhost:5432/ip_tracker" -f Backend/sql/complete_schema.sql
+      - name: Install and start backend
+        working-directory: Backend
+        run: |
+          npm install --no-audit --no-fund
+          node server.js > server.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://localhost:3000/health && break || sleep 1; done
+      - name: Run Newman API tests
+        working-directory: Backend/newman-tests
+        run: npx --yes newman@6 run IP-Tracker-Complete-Tests.postman_collection.json -e IP-Tracker-Environment.postman_environment.json
+      - name: Show backend log on failure
+        if: failure()
+        run: cat Backend/server.log
